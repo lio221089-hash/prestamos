@@ -627,7 +627,7 @@ function renderInicio(){
   const pendientes=[];
   prestamos.forEach(p=>p.cuotas.forEach((c,i)=>{
     const f=normalizarFecha(c.fecha);
-    if(!c.pagada&&f&&f<=HOY)pendientes.push({p,c,i});
+    if(!c.pagada&&f&&f<HOY)pendientes.push({p,c,i});
   }));
   // Ordenar: hoy primero, luego más atrasados
   pendientes.sort((a,b)=>normalizarFecha(b.c.fecha)-normalizarFecha(a.c.fecha));
