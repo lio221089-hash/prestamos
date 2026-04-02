@@ -933,25 +933,7 @@ function enviarWhatsApp(){
 }
 
 // ========== NUEVO PRÉSTAMO ==========
-function calcularPrevia(){
-  const m=parseFloat(document.getElementById('n-monto').value);
-  const it=parseFloat(document.getElementById('n-interes').value);
-  const cu=parseInt(document.getElementById('n-cuotas').value);
-  const fr=document.getElementById('n-frecuencia').value;
-  const fe=document.getElementById('n-fecha').value;
-  const prev=document.getElementById('previa-prestamo');
-  if(!m||isNaN(it)||!cu||!fe){prev.style.display='none';return}
-  const tot=m*(1+it/100);const val=tot/cu;
-  const fin=addDias(parseFecha(fe),diasFrec(fr)*(cu-1));
-  document.getElementById('previa-content').innerHTML=`
-    <div class="resumen-row"><span style="color:var(--text2)">Capital prestado</span><span>${fmtMoney(m)}</span></div>
-    <div class="resumen-row"><span style="color:var(--text2)">Interés (${it}%)</span><span style="color:var(--amber)">${fmtMoney(m*it/100)}</span></div>
-    <div class="resumen-row"><span style="color:var(--text2)">Total a cobrar</span><span>${fmtMoney(tot)}</span></div>
-    <div class="resumen-row"><span style="color:var(--text2)">Valor cuota (${fr})</span><span style="font-weight:700">${fmtMoney(val)}</span></div>
-    <div class="resumen-row"><span style="color:var(--text2)">Finaliza</span><span>${fmtDate(fin)}</span></div>
-  `;
-  prev.style.display='block';
-}
+function calcularPrevia(){const m=parseFloat(document.getElementById('n-monto').value);const it=parseFloat(document.getElementById('n-interes').value);const cu=parseInt(document.getElementById('n-cuotas').value);const fr=document.getElementById('n-frecuencia').value;const fe=document.getElementById('n-fecha').value;const prev=document.getElementById('previa-prestamo');if(!m||isNaN(it)||!cu||!fe){prev.style.display='none';return}const tot=m*(1+it/100);const val=tot/cu;const[y,mo,d]=fe.split('-').map(Number);let fin;if(fr==='mensual'){fin=new Date(y,mo-1+cu,d);}else if(fr==='quincenal'){fin=new Date(y,mo-1,d+(cu*15));}else if(fr==='semanal'){fin=new Date(y,mo-1,d+(cu*7));}else{fin=new Date(y,mo-1,d+cu);}const dd=fin.getDate().toString().padStart(2,'0');const mm=(fin.getMonth()+1).toString().padStart(2,'0');const yy=fin.getFullYear();document.getElementById('previa-content').innerHTML='<div class="resumen-row"><span style="color:var(--text2)">Capital prestado</span><span>$'+Math.round(m).toLocaleString('es-AR')+'</span></div><div class="resumen-row"><span style="color:var(--text2)">Interés ('+it+'%)</span><span style="color:var(--amber)">$'+Math.round(m*it/100).toLocaleString('es-AR')+'</span></div><div class="resumen-row"><span style="color:var(--text2)">Total a cobrar</span><span>$'+Math.round(tot).toLocaleString('es-AR')+'</span></div><div class="resumen-row"><span style="color:var(--text2)">Valor cuota ('+fr+')</span><span style="font-weight:700">$'+Math.round(val).toLocaleString('es-AR')+'</span></div><div class="resumen-row"><span style="color:var(--text2)">Finaliza</span><span>'+dd+'/'+mm+'/'+yy+'</span></div>';prev.style.display='block';}
 
 function guardarPrestamo(){
   const nombre=document.getElementById('n-nombre').value.trim();
