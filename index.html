@@ -504,16 +504,23 @@ function generarCuotas(p){
   const cuotas=[];
   const total=p.monto*(1+p.interes/100);
   const val=total/p.cuotasTotal;
-  const dias=diasFrec(p.frecuencia);
-  // Usamos fechaInicio ya normalizada
-  let f=new Date(p.fechaInicio);
+  const fi=new Date(p.fechaInicio);
+  const base=new Date(fi.getFullYear(),fi.getMonth(),fi.getDate());
   for(let i=0;i<p.cuotasTotal;i++){
-    cuotas.push({num:i+1,fecha:new Date(f.getFullYear(),f.getMonth(),f.getDate()),monto:val,pagada:false,fechaPago:null,moraAplicada:0});
-    f=addDias(f,dias);
+    let fecha;
+    if(p.frecuencia==='mensual'){
+      fecha=new Date(base.getFullYear(),base.getMonth()+i,base.getDate());
+    }else if(p.frecuencia==='quincenal'){
+      fecha=new Date(base.getFullYear(),base.getMonth(),base.getDate()+(i*15));
+    }else if(p.frecuencia==='semanal'){
+      fecha=new Date(base.getFullYear(),base.getMonth(),base.getDate()+(i*7));
+    }else{
+      fecha=new Date(base.getFullYear(),base.getMonth(),base.getDate()+i);
+    }
+    cuotas.push({num:i+1,fecha:fecha,monto:val,pagada:false,fechaPago:null,moraAplicada:0});
   }
   return cuotas;
 }
-
 // ========== GOOGLE SHEETS ==========
 let lastSync=null;
 async function syncGSheets(){
